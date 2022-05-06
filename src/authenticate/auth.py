@@ -13,6 +13,5 @@ class TwitterAuth:
         self.auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
         self.auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
     
-
     def get_api(self):
         return tweepy.API(self.auth)
