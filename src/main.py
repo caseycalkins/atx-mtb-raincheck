@@ -5,4 +5,4 @@ twitter_auth = TwitterAuth()
 # Get the api object
 api = twitter_auth.get_api()
 # Update status
-api.update_status("Hi Mas")
+api.update_status("Hi")
