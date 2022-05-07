@@ -1,6 +1,5 @@
-{ 
-    "data":
-    {
+{
+    "trails": {
         "walnut_creek": {"lat": "30.400", "long": "-97.686"},
         "brushy_creek": {"lat": "30.505", "long": "-97.7797"},
         "suburban_ninja": {"lat": "30.5341", "long": "-97.78"},
@@ -10,5 +9,5 @@
         "emma_long": {"lat": "30.813453", "long": "-98.369411"},
         "spider_mountain": {"lat": "30.8388", "long": "-98.3363"},
         "pace_bend": {"lat": "30.4660302", "long": "-98.0152928"}
-        }
+    }
 }
