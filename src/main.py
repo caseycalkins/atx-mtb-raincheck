@@ -18,6 +18,11 @@ TW_AUTH = TwitterAuth()
 TW_API = TW_AUTH.get_api()
 
 
+def get_yesterdays_date() -> datetime:   
+    last_midnight = datetime.combine(datetime.now(), time.min)
+    return (last_midnight - timedelta(days=1)).strftime('%Y-%m-%d')
+
+
 def parse_trail_data_file() -> dict:
     trail_coordinates = {}
     with open(PATH, "r") as trail_data:
@@ -25,13 +30,8 @@ def parse_trail_data_file() -> dict:
         for trail, coords in data.items():
             trail_coordinates[trail] = coords
     return trail_coordinates
-
-
-def get_yesterdays_date() -> datetime:   
-    last_midnight = datetime.combine(datetime.now(), time.min)
-    return (last_midnight - timedelta(days=1)).strftime('%Y-%m-%d')
-
-    
+            
+           
 def fetch_weather_data() -> dict:
     trail_weather_data = {}
     trail_data = parse_trail_data_file()
@@ -60,17 +60,14 @@ def fetch_weather_data() -> dict:
 def format_and_send_tweet():
     to_tweet = ""
     trail_weather_data = fetch_weather_data()
-    
     for trail, status in trail_weather_data.items():
         formatted_trail = trail.replace("_", " ").title()
-        if len(to_tweet) < 280:
-            to_tweet += f"{formatted_trail}: {status}\n"
-            if len(to_tweet) + (len(formatted_trail) + len(status)) > 280:
-                TW_API.update_status(to_tweet)
-                to_tweet = ""
-        else:
-            TW_API.update_status(to_tweet)
-    return
+        if len(to_tweet) + (len(formatted_trail) + len(status)) > 280:
+            TW_API.update_status(status=to_tweet)
+            to_tweet = ""
+        to_tweet += f"{formatted_trail}: {status}\n"
+    TW_API.update_status(status=to_tweet)
+        
     
 if __name__ == "__main__":
     format_and_send_tweet()
