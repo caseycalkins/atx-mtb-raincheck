@@ -14,15 +14,8 @@ load_dotenv()
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 PATH = "data/trails.json"
 
-# Create twitter auth object
 TW_AUTH = TwitterAuth()
-# Get the api object
 TW_API = TW_AUTH.get_api()
-
-
-def get_yesterdays_date() -> datetime:   
-    last_midnight = datetime.combine(datetime.now(), time.min)
-    return (last_midnight - timedelta(days=1)).strftime('%Y-%m-%d')
 
 
 def parse_trail_data_file() -> dict:
@@ -32,8 +25,13 @@ def parse_trail_data_file() -> dict:
         for trail, coords in data.items():
             trail_coordinates[trail] = coords
     return trail_coordinates
-            
-           
+
+
+def get_yesterdays_date() -> datetime:   
+    last_midnight = datetime.combine(datetime.now(), time.min)
+    return (last_midnight - timedelta(days=1)).strftime('%Y-%m-%d')
+
+    
 def fetch_weather_data() -> dict:
     trail_weather_data = {}
     trail_data = parse_trail_data_file()
@@ -51,18 +49,28 @@ def fetch_weather_data() -> dict:
             if current_rain_amount > 0:
                 trail_weather_data[trail] = f"may be experiencing rain. {current_rain_amount} inches recently detected."
             elif historical_rain_amount > 0:
-                trail_weather_data[trail] = f"may be wet. {historical_rain_amount} inches of rain within the last 24hrs."
+                trail_weather_data[trail] = f"May be wet. {historical_rain_amount} inches of rain detected within the last 24hrs."
             else:
-                trail_weather_data[trail] = "No rain detected, have fun!"
+                trail_weather_data[trail] = "No rain detected, have fun! testing length of tweeeeeeeet"
         except Exception as e:
             print(e)
     return trail_weather_data
    
 
 def format_and_send_tweet():
+    to_tweet = ""
     trail_weather_data = fetch_weather_data()
+    
     for trail, status in trail_weather_data.items():
         formatted_trail = trail.replace("_", " ").title()
-    TW_API.update_status()
+        if len(to_tweet) < 280:
+            to_tweet += f"{formatted_trail}: {status}\n"
+            if len(to_tweet) + (len(formatted_trail) + len(status)) > 280:
+                TW_API.update_status(to_tweet)
+                to_tweet = ""
+        else:
+            TW_API.update_status(to_tweet)
     return
     
+if __name__ == "__main__":
+    format_and_send_tweet()
