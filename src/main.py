@@ -12,7 +12,12 @@ from authenticate.twitter_auth import TwitterAuth
 load_dotenv()
 
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
-PATH = "data/test_data.json"
+PATH = "data/trails.json"
+
+# Create twitter auth object
+TW_AUTH = TwitterAuth()
+# Get the api object
+TW_API = TW_AUTH.get_api()
 
 
 def get_yesterdays_date() -> datetime:   
@@ -29,8 +34,8 @@ def parse_trail_data_file() -> dict:
     return trail_coordinates
             
            
-def fetch_weather_data() -> list:
-    trail_weather_data = []
+def fetch_weather_data() -> dict:
+    trail_weather_data = {}
     trail_data = parse_trail_data_file()
     yesterdays_date = get_yesterdays_date()
     history_url = "https://api.weatherapi.com/v1/history.json?key={}&q={},{}&dt={}"
@@ -44,25 +49,20 @@ def fetch_weather_data() -> list:
             historical_rain_amount = history_weather_request["forecast"]["forecastday"][0]["day"]["totalprecip_in"]
 
             if current_rain_amount > 0:
-                print(f"{trail} may be experiencing rain. {current_rain_amount} inches recently detected.")
+                trail_weather_data[trail] = f"may be experiencing rain. {current_rain_amount} inches recently detected."
             elif historical_rain_amount > 0:
-                print(f"{trail} may be wet. {historical_rain_amount} inches of rain within the last 24hrs.")
+                trail_weather_data[trail] = f"may be wet. {historical_rain_amount} inches of rain within the last 24hrs."
+            else:
+                trail_weather_data[trail] = "No rain detected, have fun!"
         except Exception as e:
             print(e)
-
+    return trail_weather_data
    
-def format_tweet_with_weather_data():
-    with open(PATH, "r") as trail_data:
-        data = json.load(trail_data)
-        return
 
-fetch_weather_data()
-
-# Create twitter auth object
-twitter_auth = TwitterAuth()
-# Get the api object
-api = twitter_auth.get_api()
-# Update status
-# api.update_status("Hi")
-
-
+def format_and_send_tweet():
+    trail_weather_data = fetch_weather_data()
+    for trail, status in trail_weather_data.items():
+        formatted_trail = trail.replace("_", " ").title()
+    TW_API.update_status()
+    return
+    
