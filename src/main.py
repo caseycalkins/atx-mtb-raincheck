@@ -7,17 +7,15 @@ from datetime import datetime, time, timedelta
 import requests
 from dotenv import load_dotenv
 
-# from authenticate.twitter_auth import TwitterAuth
-from authenticate.twitter_auth import twitter_auth
+from authenticate.twitter_auth import TwitterAuth
 
 load_dotenv()
 
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 PATH = "data/trails.json"
 
-# TW_AUTH = TwitterAuth()
-# TW_API = TW_AUTH.get_api()
-TW_API = twitter_auth()
+TW_AUTH = TwitterAuth()
+TW_API = TW_AUTH.get_api()
 
 
 def get_yesterdays_date() -> datetime:   
