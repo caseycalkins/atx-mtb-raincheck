@@ -51,7 +51,7 @@ def fetch_weather_data() -> dict:
             elif historical_rain_amount > 0:
                 trail_weather_data[trail] = f"May be wet. {historical_rain_amount} inches of rain detected within the last 24hrs."
             else:
-                trail_weather_data[trail] = "No rain detected, have fun! testing length of tweeeeeeeet"
+                trail_weather_data[trail] = "No rain detected, have fun!"
         except Exception as e:
             print(e)
     return trail_weather_data
