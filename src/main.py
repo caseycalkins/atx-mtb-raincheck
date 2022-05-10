@@ -67,7 +67,6 @@ def format_and_send_tweet():
         formatted_trail = trail.replace("_", " ").title()
         to_tweet += f"{formatted_trail}: {status}\n"
         if len(to_tweet) + len(formatted_trail) + len(status) + len(max(get_random_hashtag, key=len)) > 280:
-            # break, send the tweet and continue
             TW_API.update_status(status=to_tweet + get_random_hashtag)
             to_tweet = ""
     if to_tweet:
