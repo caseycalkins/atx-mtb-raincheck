@@ -58,20 +58,21 @@ def fetch_weather_data() -> dict:
    
 
 def format_and_send_tweet():
-    hash_tags = ["#trails", "#hiking", "#mtb", "#mtbtrails", "#mountainbiking", "#austin", "#atx", "#atxmtb", "#sendit"]
-    shuffled = random.shuffle(hash_tags)
+    hash_tags = ["#trails", "#hiking", "#mtb", "#mtbtrails", "#mountainbiking", "#austin", "#atx", "#atxmtb", "#sendit", "#XC", "#xc", "#xc_trails", "#xc_hiking", "#xc_mtb", "#xc_mountainbiking", "#downhill", "#downhill_mtb", "#cycling", "#shred", "#shredit", "#bikelife", "#bicycle", "#singletrack", "#mtbs", "#gmbn", "#localtrails", "#enduro", "#race", "#racing"]
     to_tweet = ""
     trail_weather_data = fetch_weather_data()
-    
+    get_random_hashtag = random.choice(hash_tags)
+
     for trail, status in trail_weather_data.items():
         formatted_trail = trail.replace("_", " ").title()
-        if len(to_tweet) + (len(formatted_trail) + len(status)) + len(hash_tags) > 280:
-            TW_API.update_status(status=to_tweet + " ".join((hash_tags)))
+        to_tweet += f"{formatted_trail}: {status}\n"
+        if len(to_tweet) + len(formatted_trail) + len(status) + len(max(get_random_hashtag, key=len)) > 280:
+            # break, send the tweet and continue
+            TW_API.update_status(status=to_tweet + get_random_hashtag)
             to_tweet = ""
-        else:
-            to_tweet += f"{formatted_trail}: {status} "
-    TW_API.update_status(status=to_tweet + " ".join((hash_tags)))
-        
+    if to_tweet:
+        TW_API.update_status(status=to_tweet + get_random_hashtag)
+
     
 if __name__ == "__main__":
     format_and_send_tweet()
