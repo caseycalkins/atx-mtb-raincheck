@@ -1,7 +1,7 @@
 import json
 import os
 import pprint
-import time as time_
+import random
 from datetime import datetime, time, timedelta
 
 import requests
@@ -12,7 +12,7 @@ from authenticate.twitter_auth import TwitterAuth
 load_dotenv()
 
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
-PATH = "src/data/trails.json"
+PATH = "data/trails.json"
 
 TW_AUTH = TwitterAuth()
 TW_API = TW_AUTH.get_api()
@@ -58,15 +58,19 @@ def fetch_weather_data() -> dict:
    
 
 def format_and_send_tweet():
+    hash_tags = ["#trails", "#hiking", "#mtb", "#mtbtrails", "#mountainbiking", "#austin", "#atx", "#atxmtb", "#sendit"]
+    shuffled = random.shuffle(hash_tags)
     to_tweet = ""
     trail_weather_data = fetch_weather_data()
+    
     for trail, status in trail_weather_data.items():
         formatted_trail = trail.replace("_", " ").title()
-        if len(to_tweet) + (len(formatted_trail) + len(status)) > 280:
-            TW_API.update_status(status=to_tweet)
+        if len(to_tweet) + (len(formatted_trail) + len(status)) + len(hash_tags) > 280:
+            TW_API.update_status(status=to_tweet + " ".join((hash_tags)))
             to_tweet = ""
-        to_tweet += f"{formatted_trail}: {status}\n"
-    TW_API.update_status(status=to_tweet)
+        else:
+            to_tweet += f"{formatted_trail}: {status} "
+    TW_API.update_status(status=to_tweet + " ".join((hash_tags)))
         
     
 if __name__ == "__main__":
