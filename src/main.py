@@ -58,7 +58,7 @@ def fetch_weather_data() -> dict:
    
 
 def format_and_send_tweet():
-    hash_tags = ["#trails", "#hiking", "#mtb", "#mtbtrails", "#mountainbiking", "#austin", "#atx", "#atxmtb", "#sendit", "#XC", "#xc", "#downhill", "#downhill_mtb", "#cycling", "#shred", "#shredit", "#bikelife", "#bicycle", "#singletrack", "#mtbs", "#gmbn", "#localtrails", "#enduro", "#race", "#racing"]
+    hash_tags = ["#trails", "#hiking", "#mtb", "#mtbtrails", "#mountainbiking", "#austin", "#atx", "#atxmtb", "#sendit", "#XC", "#xc", "#downhill", "#downhill_mtb", "#cycling", "#shred", "#shredit", "#bikelife", "#bicycle", "#singletrack", "#mtbs", "#gmbn", "#localtrail", "#enduro", "#race", "#racing"]
     to_tweet = ""
     trail_weather_data = fetch_weather_data()
     get_random_hashtag = random.choice(hash_tags)
