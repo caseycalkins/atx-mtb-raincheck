@@ -12,7 +12,7 @@ from authenticate.twitter_auth import TwitterAuth
 load_dotenv()
 
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
-PATH = "src/data/trails.json"
+PATH = "sr/data/trails.json"
 
 TW_AUTH = TwitterAuth()
 TW_API = TW_AUTH.get_api()
